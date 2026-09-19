@@ -10,4 +10,6 @@ Route::get('/user', function (Request $request) {
 
 Route::prefix('v1')->name('v1.')->group(function () {
     Route::get('/members', [MemberController::class, 'memberList'])->name('members.list');
+    Route::patch('/members/{memberCode}', [MemberController::class, 'update'])
+        ->where('memberCode', '[A-Za-z0-9-]+')->name('members.update');
 });

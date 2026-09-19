@@ -30,6 +30,20 @@ class MemberService
             ->orderBy('members.name')
             ->paginate(20);
     }
+
+    public function update(
+        string $memberCode,
+        array  $data,
+    ): Member
+    {
+        $member = Member::query()
+            ->whereKey($memberCode)
+            ->firstOrFail();
+
+        $member->update($data);
+
+        return $member->refresh();
+    }
 }
 
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Member;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Member\MemberRequest;
+use App\Http\Requests\Member\UpdateMemberRequest;
 use App\Http\Resources\Member\MemberResource;
 use App\Http\Service\Member\MemberService;
 use App\Support\ApiResponse;
@@ -20,7 +21,7 @@ class MemberController extends Controller
     public function memberList(MemberRequest $request): JsonResponse
     {
         $members = $this->memberService->paginate(
-            $request->validated(),
+            filter: $request->validated(),
         );
 
         $data = MemberResource::collection(
@@ -28,7 +29,7 @@ class MemberController extends Controller
         )->resolve($request);
 
         return ApiResponse::success(
-            message: 'Daftar Member Berhasil Diambil',
+            message: 'Daftar member berhasil diambil',
             data: $data,
             meta: [
                 'current_page' => $members->currentPage(),
@@ -36,6 +37,22 @@ class MemberController extends Controller
                 'total_page' => $members->lastPage(),
                 'total_data' => $members->total(),
             ]
+        );
+    }
+
+    public function update(
+        UpdateMemberRequest $request,
+        string              $memberCode
+    ): JsonResponse
+    {
+        $member = $this->memberService->update(
+            memberCode: $memberCode,
+            data: $request->validated(),
+        );
+
+        return ApiResponse::success(
+            message: 'Member berhasil diperbarui',
+            data: MemberResource::make($member),
         );
     }
 }
