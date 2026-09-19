@@ -36,7 +36,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 }
 
                 return ApiResponse::error(
-                    message: 'Data Yang Diberikan Tidak Valid',
+                    message: 'Data yang diberikan tidak valid',
                     data: [
                         'errors' => $exception->errors(),
                     ],
