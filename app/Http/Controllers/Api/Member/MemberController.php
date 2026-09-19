@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Member;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Member\CreateMemberRequest;
 use App\Http\Requests\Member\MemberRequest;
 use App\Http\Requests\Member\UpdateMemberRequest;
 use App\Http\Resources\Member\MemberResource;
@@ -45,14 +46,26 @@ class MemberController extends Controller
         string              $memberCode
     ): JsonResponse
     {
-        $member = $this->memberService->update(
+        $this->memberService->update(
             memberCode: $memberCode,
             data: $request->validated(),
         );
 
         return ApiResponse::success(
             message: 'Member berhasil diperbarui',
+        );
+    }
+
+    public function create(CreateMemberRequest $request): JsonResponse
+    {
+        $member = $this->memberService->create(
+            data: $request->validated(),
+        );
+
+        return ApiResponse::success(
+            message: 'Member berhasil dibuat',
             data: MemberResource::make($member),
+            statusCode: 201,
         );
     }
 }

@@ -34,15 +34,18 @@ class MemberService
     public function update(
         string $memberCode,
         array  $data,
-    ): Member
+    ): void
     {
         $member = Member::query()
             ->whereKey($memberCode)
             ->firstOrFail();
 
         $member->update($data);
+    }
 
-        return $member->refresh();
+    public function create(array $data): Member
+    {
+        return Member::query()->create($data);
     }
 }
 
