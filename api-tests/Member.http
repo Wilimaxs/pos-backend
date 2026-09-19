@@ -1,0 +1,25 @@
+### POST MEMBER DATA TO DATABASE
+POST  http://127.0.0.1:8000/api/v1/members
+Content-Type: application/json
+
+{
+    "name": "Wilimaxs",
+    "email": "wildan@example.com",
+    "phone": "081322325444",
+    "address": "Garut,Indonesia",
+    "is_active": true
+}
+
+
+### UPDATE MEMBER DATA TO DATABASE
+PATCH http://127.0.0.1:8000/api/v1/members/MBR-NE5BXYSM
+Content-Type: application/json
+
+{
+    "name": "Wawan Darmozo",
+    "is_active": true
+}
+
+### GET FULL MEMBER DATA
+GET  http://127.0.0.1:8000/api/v1/members
+Content-Type: application/json
