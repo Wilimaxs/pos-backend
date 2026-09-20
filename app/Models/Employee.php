@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
@@ -10,7 +11,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class Employee extends Authenticatable
 {
-    use HasApiTokens,HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
 
     protected $table = 'employees';
 
@@ -37,7 +38,7 @@ class Employee extends Authenticatable
         static::creating(function (Employee $employee): void {
             $employee->employee_code = sprintf(
                 '%s-%s',
-                'EMP-',
+                'EMP',
                 Str::upper(Str::random(8))
             );
         });
@@ -50,5 +51,15 @@ class Employee extends Authenticatable
             'is_owner' => 'boolean',
             'is_active' => 'boolean',
         ];
+    }
+
+    public function employeePermissions(): HasMany
+    {
+        return $this->hasMany(EmployeePermission::class, 'employee_code', 'employee_code');
+    }
+
+    public function hasPermission(string $permissionName): bool
+    {
+        return $this->employeePermissions()->where('name', $permissionName)->exists();
     }
 }
