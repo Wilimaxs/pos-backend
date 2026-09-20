@@ -1,0 +1,70 @@
+@baseUrl = http://127.0.0.1:8000/api/v1
+
+### 1. POST CREATE STORE (Tipe CENTRAL atau BRANCH)
+POST {{baseUrl}}/stores
+Content-Type: application/json
+Accept: application/json
+
+{
+    "name": "Toko Sentral Garut",
+    "email": "garut.central@example.com",
+    "phone": "081234567890",
+    "address": "Jl. Merdeka No. 12, Garut",
+    "type": "CENTRAL",
+    "is_active": true
+}
+
+### 2. POST CREATE STORE (BRANCH)
+POST {{baseUrl}}/stores
+Content-Type: application/json
+Accept: application/json
+
+{
+    "name": "Cabang Bandung",
+    "email": "bandung.branch@example.com",
+    "phone": "081298765432",
+    "address": "Jl. Asia Afrika No. 45, Bandung",
+    "type": "BRANCH",
+    "is_active": true
+}
+
+### 3. GET ALL STORES (Pagination default 20)
+GET {{baseUrl}}/stores
+Accept: application/json
+
+### 4. GET STORES WITH SEARCH (Filter berdasarkan kode store / nama)
+GET {{baseUrl}}/stores?search=Sentral
+Accept: application/json
+
+### 5. GET STORES WITH FILTER STATUS AKTIF
+GET {{baseUrl}}/stores?is_active=1
+Accept: application/json
+
+### 6. GET STORES WITH SEARCH AND FILTER STATUS
+GET {{baseUrl}}/stores?search=Sentral&is_active=1
+Accept: application/json
+
+### 7. GET STORES PAGINATION (Page 2)
+GET {{baseUrl}}/stores?page=2
+Accept: application/json
+
+### 8. GET STORES DROPDOWN / OPTIONS (Hanya store aktif)
+GET {{baseUrl}}/stores/options
+Accept: application/json
+
+### 9. GET STORES DROPDOWN WITH SEARCH (Cari nama / kode store)
+GET {{baseUrl}}/stores/options?search=Sentral
+Accept: application/json
+
+### 10. PATCH UPDATE STORE DATA
+PATCH {{baseUrl}}/stores/STR-C1234567
+Content-Type: application/json
+Accept: application/json
+
+{
+    "name": "Toko Sentral Garut Utama",
+    "email": "sentral.garut.updated@example.com",
+    "phone": "081234567999",
+    "address": "Jl. Merdeka No. 15, Garut",
+    "is_active": true
+}

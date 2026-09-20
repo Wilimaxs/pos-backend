@@ -8,13 +8,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 class MemberService
 {
 
-    /**
-     * @param array $filter
-     * @return LengthAwarePaginator
-     *
-     * GET ALL MEMBERS
-     *
-     */
+
     public function paginate(array $filter): LengthAwarePaginator
     {
         return Member::query()
@@ -39,14 +33,7 @@ class MemberService
             ->paginate(20);
     }
 
-    /**
-     * @param string $memberCode
-     * @param array $data
-     * @return void
-     *
-     * UPDATE MEMBER
-     *
-     */
+
     public function update(
         string $memberCode,
         array  $data,
@@ -59,33 +46,20 @@ class MemberService
         $member->update($data);
     }
 
-    /**
-     * @param array $data
-     * @return Member
-     *
-     * CREATE MEMBER
-     *
-     */
+
     public function create(array $data): Member
     {
         return Member::query()->create($data);
     }
 
-    /**
-     * @param array $filter
-     * @return LengthAwarePaginator
-     *
-     * DROPDOWN MEMBER
-     *
-     */
-    public function dropDown(array $filter): LengthAwarePaginator
+
+    public function options(array $filter): LengthAwarePaginator
     {
         return Member::query()
-            ->select(
-                'members.member_code',
+            ->select(['members.member_code',
                 'members.name',
                 'members.phone'
-            )
+            ])
             ->where('members.is_active', true)
             ->when(
                 filled($filter['search'] ?? null),

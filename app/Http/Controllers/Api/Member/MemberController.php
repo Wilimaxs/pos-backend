@@ -70,9 +70,9 @@ class MemberController extends Controller
         );
     }
 
-    public function dropDown(MemberRequest $request): JsonResponse
+    public function options(MemberRequest $request): JsonResponse
     {
-        $member = $this->memberService->dropDown(
+        $member = $this->memberService->options(
             filter: $request->validated(),
         );
 
@@ -81,7 +81,7 @@ class MemberController extends Controller
         )->resolve();
 
         return ApiResponse::success(
-            message: 'Daftar member berhasil diambil',
+            message: 'Pilihan Member berhasil diambil',
             data: $data,
             meta: [
                 'current_page' => $member->currentPage(),
