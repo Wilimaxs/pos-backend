@@ -1,0 +1,78 @@
+@baseUrl = http://127.0.0.1:8000/api/v1
+
+### 1. POST CREATE SUPPLIER (Lengkap dengan Penanggung Jawab & Email)
+POST {{baseUrl}}/suppliers
+Content-Type: application/json
+Accept: application/json
+
+{
+    "name": "PT Sumber Pangan Abadi",
+    "person_responsible": "Budi Santoso",
+    "phone": "081234567890",
+    "address": "Jl. Industri No. 88, Garut",
+    "email": "supplier@sumberpangan.com",
+    "is_active": true
+}
+
+### 2. POST CREATE SUPPLIER (Minimal Field Wajib)
+POST {{baseUrl}}/suppliers
+Content-Type: application/json
+Accept: application/json
+
+{
+    "name": "CV Maju Jaya",
+    "phone": "08129876512",
+    "address": "Jl. Soekarno Hatta No. 120, Bandung",
+    "is_active": true
+}
+
+### 3. GET ALL SUPPLIERS (Pagination default 20)
+GET {{baseUrl}}/suppliers
+Accept: application/json
+
+### 4. GET SUPPLIERS WITH SEARCH (Filter berdasarkan kode supplier / nama)
+GET {{baseUrl}}/suppliers?search=Sumber
+Accept: application/json
+
+### 5. GET SUPPLIERS WITH FILTER STATUS AKTIF
+GET {{baseUrl}}/suppliers?is_active=1
+Accept: application/json
+
+### 6. GET SUPPLIERS WITH SEARCH AND FILTER STATUS
+GET {{baseUrl}}/suppliers?search=Sumber&is_active=1
+Accept: application/json
+
+### 7. GET SUPPLIERS PAGINATION (Page 2)
+GET {{baseUrl}}/suppliers?page=2
+Accept: application/json
+
+### 8. GET SUPPLIERS DROPDOWN / OPTIONS (Hanya supplier aktif)
+GET {{baseUrl}}/suppliers/options
+Accept: application/json
+
+### 9. GET SUPPLIERS DROPDOWN WITH SEARCH (Cari nama / kode supplier)
+GET {{baseUrl}}/suppliers/options?search=Sumber
+Accept: application/json
+
+### 10. PATCH UPDATE SUPPLIER DATA
+PATCH {{baseUrl}}/suppliers/SPL-JMXJO9BY
+Content-Type: application/json
+Accept: application/json
+
+{
+    "name": "PT Sumber Pangan Abadi Sejahtera",
+    "person_responsible": "Budi Santoso, S.E.",
+    "phone": "081234567999",
+    "address": "Jl. Industri No. 90, Garut",
+    "email": "contact@sumberpangan.com",
+    "is_active": true
+}
+
+### 11. UPDATE STATUS ONLY
+PATCH {{baseUrl}}/suppliers/SPL-JMXJO9BY
+Content-Type: application/json
+Accept: application/json
+
+{
+    "is_active": false
+}

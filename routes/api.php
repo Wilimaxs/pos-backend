@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Api\Member\MemberController;
 use App\Http\Controllers\Api\Store\StoreController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\Supplier\SupplierController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->name('v1.')->group(function () {
@@ -19,4 +19,11 @@ Route::prefix('v1')->name('v1.')->group(function () {
     Route::post('/stores', [StoreController::class, 'create'])->name('stores.create');
     Route::patch('/stores/{storeCode}', [StoreController::class, 'update'])
         ->where('storeCode', '[A-Za-z0-9-]+')->name('stores.update');
+
+    // Supplier
+    Route::get('/suppliers/options', [SupplierController::class, 'options'])->name('suppliers.options');
+    Route::get('/suppliers', [SupplierController::class, 'supplierList'])->name('suppliers.list');
+    Route::post('/suppliers', [SupplierController::class, 'create'])->name('suppliers.create');
+    Route::patch('/suppliers/{supplierCode}', [SupplierController::class, 'update'])
+        ->where('supplierCode', '[A-Za-z0-9-]+')->name('suppliers.update');
 });
