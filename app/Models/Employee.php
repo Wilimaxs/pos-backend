@@ -60,6 +60,11 @@ class Employee extends Authenticatable
 
     public function hasPermission(string $permissionName): bool
     {
-        return $this->employeePermissions()->where('name', $permissionName)->exists();
+        return $this->employeePermissions()
+            ->whereHas(
+                'permission',
+                fn ($query) => $query->where('name', $permissionName),
+            )
+            ->exists();
     }
 }
