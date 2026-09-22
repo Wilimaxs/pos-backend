@@ -14,7 +14,9 @@ Route::prefix('v1')->name('v1.')->group(function () {
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/employees', [EmployeeController::class, 'create'])->middleware('permission:employee.create')
-            ->name('employees.create');
+            ->name('employees.create.all');
+        Route::patch('/employees/{employeeCode}', [EmployeeController::class, 'update'])->middleware('permission:employee.edit')
+            ->where('employeeCode', '[A-Za-z0-9-]+')->name('employees.update.all');
     });
 
     // Member
