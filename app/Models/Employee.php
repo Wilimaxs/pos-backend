@@ -30,7 +30,6 @@ class Employee extends Authenticatable
         'password',
         'address',
         'position',
-        'is_owner',
         'is_active',
     ];
 
@@ -66,6 +65,10 @@ class Employee extends Authenticatable
 
     public function hasPermission(string $permissionName): bool
     {
+        if ($this->is_owner) {
+            return true;
+        }
+
         return $this->employeePermissions()
             ->whereHas(
                 'permission',
