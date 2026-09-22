@@ -63,6 +63,12 @@ class EmployeeService
                     $query->where('employees.is_active', $filters['is_active']);
                 }
             )
+            ->when(
+                filled($filters['store_code'] ?? null),
+                function ($query) use ($filters) {
+                    $query->where('employees.store_code', $filters['store_code']);
+                }
+            )
             ->orderByDesc('employees.created_at')
             ->orderBy('employees.name')
             ->paginate(20);

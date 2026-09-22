@@ -4,6 +4,7 @@ namespace App\Http\Requests\Employee;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class EmployeeRequest extends FormRequest
 {
@@ -25,6 +26,7 @@ class EmployeeRequest extends FormRequest
         return [
             'search' => ['nullable', 'string', 'max:50'],
             'is_active' => ['nullable', 'boolean'],
+            'store_code' => ['bail', 'nullable', 'string', Rule::exists('stores', 'store_code')],
         ];
     }
 
@@ -33,7 +35,11 @@ class EmployeeRequest extends FormRequest
         return [
             'search.string' => 'Pencarian harus berupa teks.',
             'search.max' => 'Pencarian maksimal 50 karakter.',
+
             'is_active.boolean' => 'Status aktif harus bernilai true atau false.',
+
+            'store_code.string' => 'Kode store harus berupa teks.',
+            'store_code.exists' => 'Store tidak ditemukan.',
         ];
     }
 }
