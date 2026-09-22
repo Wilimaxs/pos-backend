@@ -58,7 +58,7 @@ class EmployeeService
                 }
             )
             ->when(
-                array_key_exists('is_active', $filters),
+                !is_null($filters['is_active'] ?? null),
                 function ($query) use ($filters) {
                     $query->where('employees.is_active', $filters['is_active']);
                 }
