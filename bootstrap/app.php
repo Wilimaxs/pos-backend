@@ -1,6 +1,7 @@
 <?php
 
 use App\Support\ApiResponse;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Application;
@@ -19,7 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->throttleApi();
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
@@ -77,11 +78,29 @@ return Application::configure(basePath: dirname(__DIR__))
                 }
 
                 return ApiResponse::error(
-                    message: 'Autentikasi diperlukan',
+                    message: 'Sesi tidak valid atau telah berakhir',
                     statusCode: 401,
                 );
             }
         );
+
+        $exceptions->render(
+            function (
+                AuthorizationException $exception,
+                Request $request,
+            ) {
+                if (! $request->is('api/*')) {
+                    return null;
+                }
+
+                return ApiResponse::error(
+                    message: 'Anda tidak memiliki izin untuk melakukan tindakan ini',
+                    statusCode: 403,
+                );
+            }
+        );
+
+
 
         $exceptions->render(
             function (
@@ -95,6 +114,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 $statusCode = $exception->getStatusCode();
 
                 $message = match ($statusCode) {
+                    401 => 'Nomor telepon atau kata sandi salah',
                     403 => 'Anda tidak memiliki izin untuk melakukan tindakan ini',
                     405 => 'Metode HTTP tidak diizinkan',
                     419 => 'Sesi telah kedaluwarsa',

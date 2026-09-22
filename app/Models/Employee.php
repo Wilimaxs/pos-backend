@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -58,12 +59,20 @@ class Employee extends Authenticatable
         return $this->hasMany(EmployeePermission::class, 'employee_code', 'employee_code');
     }
 
+    public function store(): BelongsTo
+    {
+        return $this->belongsTo(Store::class, 'store_code', 'store_code');
+    }
+
     public function hasPermission(string $permissionName): bool
     {
         return $this->employeePermissions()
             ->whereHas(
                 'permission',
-                fn ($query) => $query->where('name', $permissionName),
+                fn($query) => $query->where(
+                    'name',
+                    $permissionName
+                )
             )
             ->exists();
     }
