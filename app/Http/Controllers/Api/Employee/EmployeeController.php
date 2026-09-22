@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api\Employee;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Employee\CreateEmployeeRequest;
+use App\Http\Requests\Employee\EmployeeRequest;
 use App\Http\Requests\Employee\UpdateEmployeeRequest;
+use App\Http\Resources\Employee\EmployeeResource;
 use App\Http\Service\Employee\EmployeeService;
 use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
@@ -31,7 +33,7 @@ class EmployeeController extends Controller
 
     public function update(
         UpdateEmployeeRequest $request,
-        string $employeeCode,
+        string                $employeeCode,
     ): JsonResponse
     {
         $this->employeeService->update(
@@ -42,6 +44,30 @@ class EmployeeController extends Controller
 
         return ApiResponse::success(
             message: 'Data Pegawai berhasil diupdate'
+        );
+    }
+
+    public function employeeList(
+        EmployeeRequest $request
+    ): JsonResponse
+    {
+        $employees = $this->employeeService->pagination(
+            $request->validated()
+        );
+
+        $data = EmployeeResource::collection(
+            $employees->getCollection()
+        )->resolve($request);
+
+        return ApiResponse::success(
+            message: 'Data Pegawai berhasil diambil',
+            data: $data,
+            meta: [
+                'current_page' => $employees->currentPage(),
+                'per_page' => $employees->perPage(),
+                'total_page' => $employees->lastPage(),
+                'total_data' => $employees->total(),
+            ]
         );
     }
 }

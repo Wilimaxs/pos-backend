@@ -4,6 +4,7 @@ namespace App\Http\Service\Employee;
 
 use App\Models\Employee;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Validation\ValidationException;
 
 class EmployeeService
@@ -35,5 +36,35 @@ class EmployeeService
         }
 
         $employee->update($data);
+    }
+
+    public function pagination(
+        array $filters
+    ): LengthAwarePaginator
+    {
+        return Employee::query()
+            ->with([
+                'store:store_code,name,address,phone,type'
+            ])
+            ->when(
+                filled($filters['search'] ?? null),
+                function ($query) use ($filters) {
+                    $search = trim($filters['search']);
+                    $query->where(function ($query) use ($search) {
+                        $query
+                            ->where('employees.employee_code', 'like', "%$search%")
+                            ->orWhere('employees.name', 'like', "%$search%");
+                    });
+                }
+            )
+            ->when(
+                array_key_exists('is_active', $filters),
+                function ($query) use ($filters) {
+                    $query->where('employees.is_active', $filters['is_active']);
+                }
+            )
+            ->orderByDesc('employees.created_at')
+            ->orderBy('employees.name')
+            ->paginate(20);
     }
 }

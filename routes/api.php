@@ -12,11 +12,14 @@ Route::prefix('v1')->name('v1.')->group(function () {
     Route::post('auth/login', [AuthController::class, 'login'])->middleware('throttle:login')
         ->name('auth.login');
 
+    // Employee
     Route::middleware('auth:sanctum')->group(function () {
-        Route::post('/employees', [EmployeeController::class, 'create'])->middleware('permission:employee.create')
+        Route::post('/employees', [EmployeeController::class, 'create'])->middleware('permission:employee.create-all')
             ->name('employees.create.all');
-        Route::patch('/employees/{employeeCode}', [EmployeeController::class, 'update'])->middleware('permission:employee.edit')
+        Route::patch('/employees/{employeeCode}', [EmployeeController::class, 'update'])->middleware('permission:employee.edit-all')
             ->where('employeeCode', '[A-Za-z0-9-]+')->name('employees.update.all');
+        Route::get('/employees', [EmployeeController::class, 'employeeList'])->middleware('permission:employee.view-all')
+            ->name('employees.list.all');
     });
 
     // Member
