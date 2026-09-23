@@ -26,6 +26,7 @@ class StoreController extends Controller
     {
         $stores = $this->storeService->paginate(
             filter: $request->validated(),
+            actor: $request->user(),
         );
 
         $data = StoreResource::collection(
@@ -48,6 +49,7 @@ class StoreController extends Controller
     {
         $stores = $this->storeService->options(
             filter: $request->validated(),
+            actor: $request->user(),
         );
 
         $data = StoreOptionResource::collection(
@@ -87,6 +89,7 @@ class StoreController extends Controller
         $this->storeService->update(
             storeCode: $storeCode,
             data: $request->validated(),
+            actor: $request->user(),
         );
 
         return ApiResponse::success(

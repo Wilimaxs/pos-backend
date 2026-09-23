@@ -43,11 +43,17 @@ Route::prefix('v1')->name('v1.')->group(function () {
     });
 
     // Store
-    Route::get('/stores/options', [StoreController::class, 'options'])->name('stores.options');
-    Route::get('/stores', [StoreController::class, 'storeList'])->name('stores.list');
-    Route::post('/stores', [StoreController::class, 'create'])->name('stores.create');
-    Route::patch('/stores/{storeCode}', [StoreController::class, 'update'])
-        ->where('storeCode', '[A-Za-z0-9-]+')->name('stores.update');
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/stores/options', [StoreController::class, 'options'])
+            ->middleware('permission:store.view')->name('stores.options');
+        Route::get('/stores', [StoreController::class, 'storeList'])
+            ->middleware('permission:store.view')->name('stores.list');
+        Route::post('/stores', [StoreController::class, 'create'])
+            ->middleware('permission:store.create')->name('stores.create');
+        Route::patch('/stores/{storeCode}', [StoreController::class, 'update'])
+            ->middleware('permission:store.edit')
+            ->where('storeCode', '[A-Za-z0-9-]+')->name('stores.update');
+    });
 
     // Supplier
     Route::get('/suppliers/options', [SupplierController::class, 'options'])->name('suppliers.options');
