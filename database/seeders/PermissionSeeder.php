@@ -66,13 +66,15 @@ class PermissionSeeder extends Seeder
             'supplier.create' => 'Mendaftarkan supplier baru.',
             'supplier.edit' => 'Mengubah informasi supplier.',
 
-            // Employee dan delegasi permission.
+            // Employee
             'employee.view' => 'Melihat employee pada store tempat pengguna ditugaskan.',
             'employee.view-all' => 'Melihat employee dari seluruh store.',
             'employee.create' => 'Membuat akun employee dan menentukan penugasan store.',
             'employee.create-all' => 'Membuat akun employee dan menentukan penugasan store dari seluruh store.',
             'employee.edit' => 'Mengubah akun, penugasan store, dan status aktif employee.',
             'employee.edit-all' => 'Mengubah akun, penugasan store, dan status aktif employee dari seluruh store.',
+
+            //delegasi permission.
             'employee.manage-permission' => 'Memberikan dan mencabut permission employee dalam batas kewenangan pengguna.',
             'employee.manage-permission-all' => 'Memberikan dan mencabut permission employee dari seluruh store.',
         ];
