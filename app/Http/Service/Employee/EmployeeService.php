@@ -10,9 +10,15 @@ use Illuminate\Validation\ValidationException;
 class EmployeeService
 {
     public function create(
-        array $data,
+        array    $data,
+        Employee $actor
     ): void
     {
+
+        if (!$actor->hasPermission('employee.create-all') && $data['store_code'] !== $actor->store_code) {
+            abort(403, 'Anda tidak memiliki izin untuk membuat karyawan di toko lain.');
+        }
+
         Employee::query()->create($data);
     }
 
@@ -21,6 +27,12 @@ class EmployeeService
         $employee = Employee::query()
             ->where('employees.employee_code', $employeeCode)
             ->firstOrFail();
+
+        if (!$actor->hasPermission('employee.edit-all') && (
+                $employee->store_code !== $actor->store_code ||
+                (array_key_exists('store_code', $data) && $data['store_code'] !== $actor->store_code))) {
+            throw new AuthorizationException;
+        }
 
         if ($employee->is_owner && !$actor->is_owner) {
             throw new AuthorizationException;
@@ -39,10 +51,17 @@ class EmployeeService
     }
 
     public function pagination(
-        array $filters
+        array    $filters,
+        Employee $actor
     ): LengthAwarePaginator
     {
-        return Employee::query()
+        $query = Employee::query();
+
+        if (!$actor->hasPermission('employee.view-all')) {
+            $query->where('employees.store_code', $actor->store_code);
+        }
+
+        return $query
             ->with([
                 'store:store_code,name,address,phone,type'
             ])

@@ -22,7 +22,8 @@ class EmployeeController extends Controller
     public function create(CreateEmployeeRequest $request): JsonResponse
     {
         $this->employeeService->create(
-            $request->validated()
+            data: $request->validated(),
+            actor: $request->user()
         );
 
         return ApiResponse::success(
@@ -52,7 +53,8 @@ class EmployeeController extends Controller
     ): JsonResponse
     {
         $employees = $this->employeeService->pagination(
-            $request->validated()
+            filters: $request->validated(),
+            actor: $request->user()
         );
 
         $data = EmployeeResource::collection(

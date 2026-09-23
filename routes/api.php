@@ -14,12 +14,12 @@ Route::prefix('v1')->name('v1.')->group(function () {
 
     // Employee
     Route::middleware('auth:sanctum')->group(function () {
-        Route::post('/employees', [EmployeeController::class, 'create'])->middleware('permission:employee.create-all')
-            ->name('employees.create.all');
-        Route::patch('/employees/{employeeCode}', [EmployeeController::class, 'update'])->middleware('permission:employee.edit-all')
-            ->where('employeeCode', '[A-Za-z0-9-]+')->name('employees.update.all');
-        Route::get('/employees', [EmployeeController::class, 'employeeList'])->middleware('permission:employee.view-all')
-            ->name('employees.list.all');
+        Route::post('/employees', [EmployeeController::class, 'create'])->middleware('permission:employee.create-all,employee.create')
+            ->name('employees.create');
+        Route::patch('/employees/{employeeCode}', [EmployeeController::class, 'update'])->middleware('permission:employee.edit,employee.edit-all')
+            ->where('employeeCode', '[A-Za-z0-9-]+')->name('employees.update');
+        Route::get('/employees', [EmployeeController::class, 'employeeList'])->middleware('permission:employee.view,employee.view-all')
+            ->name('employees.list');
     });
 
     // Member
