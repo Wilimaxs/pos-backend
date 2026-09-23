@@ -30,11 +30,17 @@ Route::prefix('v1')->name('v1.')->group(function () {
     });
 
     // Member
-    Route::post('/members', [MemberController::class, 'create'])->name('members.create');
-    Route::get('/members', [MemberController::class, 'memberList'])->name('members.list');
-    Route::get('/members/options', [MemberController::class, 'options'])->name('members.dropDown');
-    Route::patch('/members/{memberCode}', [MemberController::class, 'update'])
-        ->where('memberCode', '[A-Za-z0-9-]+')->name('members.update');
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/members', [MemberController::class, 'create'])
+            ->middleware('permission:member.create')->name('members.create');
+        Route::get('/members', [MemberController::class, 'memberList'])
+            ->middleware('permission:member.view')->name('members.list');
+        Route::get('/members/options', [MemberController::class, 'options'])
+            ->middleware('permission:member.view')->name('members.dropDown');
+        Route::patch('/members/{memberCode}', [MemberController::class, 'update'])
+            ->middleware('permission:member.edit')
+            ->where('memberCode', '[A-Za-z0-9-]+')->name('members.update');
+    });
 
     // Store
     Route::get('/stores/options', [StoreController::class, 'options'])->name('stores.options');
