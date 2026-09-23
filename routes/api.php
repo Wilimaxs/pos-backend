@@ -56,9 +56,15 @@ Route::prefix('v1')->name('v1.')->group(function () {
     });
 
     // Supplier
-    Route::get('/suppliers/options', [SupplierController::class, 'options'])->name('suppliers.options');
-    Route::get('/suppliers', [SupplierController::class, 'supplierList'])->name('suppliers.list');
-    Route::post('/suppliers', [SupplierController::class, 'create'])->name('suppliers.create');
-    Route::patch('/suppliers/{supplierCode}', [SupplierController::class, 'update'])
-        ->where('supplierCode', '[A-Za-z0-9-]+')->name('suppliers.update');
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/suppliers/options', [SupplierController::class, 'options'])
+            ->middleware('permission:supplier.view')->name('suppliers.options');
+        Route::get('/suppliers', [SupplierController::class, 'supplierList'])
+            ->middleware('permission:supplier.view')->name('suppliers.list');
+        Route::post('/suppliers', [SupplierController::class, 'create'])
+            ->middleware('permission:supplier.create')->name('suppliers.create');
+        Route::patch('/suppliers/{supplierCode}', [SupplierController::class, 'update'])
+            ->middleware('permission:supplier.edit')
+            ->where('supplierCode', '[A-Za-z0-9-]+')->name('suppliers.update');
+    });
 });
