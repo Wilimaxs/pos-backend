@@ -17,17 +17,15 @@ class CheckPermission
     public function handle(
         Request $request,
         Closure $next,
-        string  ...$permissions
+        string $permission
     ): Response
     {
         $employee = $request->user();
 
-        foreach ($permissions as $permission) {
-            if ($employee?->hasPermission($permission)) {
-                return $next($request);
-            }
+        if (! $employee?->hasPermission($permission)) {
+            throw new AuthorizationException;
         }
 
-        throw new AuthorizationException;
+        return $next($request);
     }
 }

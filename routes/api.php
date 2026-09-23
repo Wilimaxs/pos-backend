@@ -15,17 +15,17 @@ Route::prefix('v1')->name('v1.')->group(function () {
 
     // Employee
     Route::middleware('auth:sanctum')->group(function () {
-        Route::post('/employees', [EmployeeController::class, 'create'])->middleware('permission:employee.create-all,employee.create')
+        Route::post('/employees', [EmployeeController::class, 'create'])->middleware('permission:employee.create')
             ->name('employees.create');
-        Route::patch('/employees/{employeeCode}', [EmployeeController::class, 'update'])->middleware('permission:employee.edit,employee.edit-all')
+        Route::patch('/employees/{employeeCode}', [EmployeeController::class, 'update'])->middleware('permission:employee.edit')
             ->where('employeeCode', '[A-Za-z0-9-]+')->name('employees.update');
-        Route::get('/employees', [EmployeeController::class, 'employeeList'])->middleware('permission:employee.view,employee.view-all')
+        Route::get('/employees', [EmployeeController::class, 'employeeList'])->middleware('permission:employee.view')
             ->name('employees.list');
         Route::put('/employees/{employeeCode}/permissions', [PermissionController::class, 'update'])
-            ->middleware('permission:employee.manage-permission,employee.manage-permission-all')
+            ->middleware('permission:employee.manage-permission')
             ->where('employeeCode', '[A-Za-z0-9-]+')->name('employees.permissions.update');
         Route::get('/employees/{employeeCode}/permissions', [PermissionController::class, 'index'])
-            ->middleware('permission:employee.manage-permission,employee.manage-permission-all')
+            ->middleware('permission:employee.manage-permission')
             ->where('employeeCode', '[A-Za-z0-9-]+')->name('employees.permissions.list');
     });
 

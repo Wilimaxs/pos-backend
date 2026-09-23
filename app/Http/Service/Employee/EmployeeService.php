@@ -15,7 +15,7 @@ class EmployeeService
     ): void
     {
 
-        if (!$actor->hasPermission('employee.create-all') && $data['store_code'] !== $actor->store_code) {
+        if (! $actor->is_owner && $data['store_code'] !== $actor->store_code) {
             abort(403, 'Anda tidak memiliki izin untuk membuat karyawan di toko lain.');
         }
 
@@ -28,7 +28,7 @@ class EmployeeService
             ->where('employees.employee_code', $employeeCode)
             ->firstOrFail();
 
-        if (!$actor->hasPermission('employee.edit-all') && (
+        if (! $actor->is_owner && (
                 $employee->store_code !== $actor->store_code ||
                 (array_key_exists('store_code', $data) && $data['store_code'] !== $actor->store_code))) {
             throw new AuthorizationException;
@@ -57,7 +57,7 @@ class EmployeeService
     {
         $query = Employee::query();
 
-        if (!$actor->hasPermission('employee.view-all')) {
+        if (! $actor->is_owner) {
             $query->where('employees.store_code', $actor->store_code);
         }
 

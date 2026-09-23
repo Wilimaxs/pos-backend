@@ -20,9 +20,7 @@ class PermissionService
             ->where('employees.employee_code', $employeeCode)
             ->firstOrFail();
 
-        if (!$actor->hasPermission('employee.manage-permission-all')
-            && $employee->store_code !== $actor->store_code
-        ) {
+        if (! $actor->is_owner && $employee->store_code !== $actor->store_code) {
             throw new AuthorizationException;
         }
 
