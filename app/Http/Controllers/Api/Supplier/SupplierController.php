@@ -71,13 +71,12 @@ class SupplierController extends Controller
         CreateSupplierRequest $request,
     ): JsonResponse
     {
-        $supplier = $this->supplierService->create(
+        $this->supplierService->create(
             data: $request->validated(),
         );
 
         return ApiResponse::success(
             message: 'Supplier berhasil dibuat',
-            data: SupplierResource::make($supplier),
             statusCode: 201,
         );
     }
