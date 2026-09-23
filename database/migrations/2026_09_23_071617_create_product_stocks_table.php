@@ -14,9 +14,9 @@ return new class extends Migration {
             $table->id();
             $table->string('sku', 12);
             $table->string('store_code')->index();
-            $table->decimal('stock_minimum')->default(0);
-            $table->decimal('stock_quantity')->default(0);
-            $table->decimal('selling_price')->default(0);
+            $table->decimal('stock_minimum',15)->default(0);
+            $table->decimal('stock_quantity',15)->default(0);
+            $table->decimal('selling_price', 15)->default(0);
             $table->timestamps();
 
             $table->foreign('sku')->references('sku')->on('products');

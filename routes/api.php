@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\Category\CategoryController;
 use App\Http\Controllers\Api\Employee\EmployeeController;
 use App\Http\Controllers\Api\Employee\PermissionController;
 use App\Http\Controllers\Api\Member\MemberController;
@@ -66,5 +67,21 @@ Route::prefix('v1')->name('v1.')->group(function () {
         Route::patch('/suppliers/{supplierCode}', [SupplierController::class, 'update'])
             ->middleware('permission:supplier.edit')
             ->where('supplierCode', '[A-Za-z0-9-]+')->name('suppliers.update');
+    });
+
+    // Category
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/categories', [CategoryController::class, 'categoryList'])
+            ->middleware('permission:product.view')->name('categories.list');
+        Route::post('/categories', [CategoryController::class, 'create'])
+            ->middleware('permission:product.manage')->name('categories.create');
+        Route::patch('/categories/{categoryCode}', [CategoryController::class, 'update'])
+            ->middleware('permission:product.manage')
+            ->where('categoryCode', '[A-Za-z0-9-]+')->name('categories.update');
+    });
+
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/categories/options', [CategoryController::class, 'options'])
+            ->middleware('permission:sale.create')->name('sale.options');
     });
 });
