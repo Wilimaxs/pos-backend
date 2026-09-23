@@ -57,13 +57,12 @@ class CategoryController extends Controller
 
     public function create(CreateCategoryRequest $request): JsonResponse
     {
-        $category = $this->categoryService->create(
+        $this->categoryService->create(
             data: $request->validated(),
         );
 
         return ApiResponse::success(
             message: 'Kategori berhasil dibuat',
-            data: CategoryResource::make($category),
             statusCode: 201,
         );
     }
