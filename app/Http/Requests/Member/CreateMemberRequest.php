@@ -4,6 +4,7 @@ namespace App\Http\Requests\Member;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CreateMemberRequest extends FormRequest
 {
@@ -25,7 +26,7 @@ class CreateMemberRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:50'],
             'email' => ['nullable', 'email', 'max:255'],
-            'phone' => ['required', 'string', 'max:20'],
+            'phone' => ['bail', 'required', 'string', 'max:20', Rule::unique('members', 'phone')],
             'address' => ['required', 'string', 'max:255'],
             'is_active' => ['sometimes', 'boolean'],
         ];
@@ -44,6 +45,7 @@ class CreateMemberRequest extends FormRequest
             'phone.required' => 'Nomor telepon wajib diisi.',
             'phone.string' => 'Nomor telepon harus berupa teks.',
             'phone.max' => 'Nomor telepon maksimal 20 karakter.',
+            'phone.unique' => 'Nomor telepon sudah digunakan oleh member lain.',
 
             'address.required' => 'Alamat wajib diisi.',
             'address.string' => 'Alamat harus berupa teks.',
