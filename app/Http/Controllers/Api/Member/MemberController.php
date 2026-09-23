@@ -59,13 +59,12 @@ class MemberController extends Controller
 
     public function create(CreateMemberRequest $request): JsonResponse
     {
-        $member = $this->memberService->create(
+        $this->memberService->create(
             data: $request->validated(),
         );
 
         return ApiResponse::success(
             message: 'Member berhasil dibuat',
-            data: MemberResource::make($member),
             statusCode: 201,
         );
     }
