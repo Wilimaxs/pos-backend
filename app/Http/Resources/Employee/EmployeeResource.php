@@ -17,14 +17,14 @@ class EmployeeResource extends JsonResource
         $store = $this->store;
 
         return [
-            'employe_code' => $this->employee_code,
-            'store' => [
+            'employee_code' => $this->employee_code,
+            'store' => $store ? [
                 'code' => $store->store_code,
                 'name' => $store->name,
                 'address' => $store->address,
                 'phone' => $store->phone,
                 'type' => $store->type,
-            ],
+            ] : null,
             'name' => $this->name,
             'phone' => $this->phone,
             'address' => $this->address,

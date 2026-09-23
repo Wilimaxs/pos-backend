@@ -61,6 +61,10 @@ class EmployeeService
             $query->where('employees.store_code', $actor->store_code);
         }
 
+        if (!$actor->is_owner) {
+            $query->where('employees.is_owner', false);
+        }
+
         return $query
             ->with([
                 'store:store_code,name,address,phone,type'
@@ -78,13 +82,13 @@ class EmployeeService
             )
             ->when(
                 !is_null($filters['is_active'] ?? null),
-                function ($query) use ($filters) {
+                function ($query) use ($filters): void {
                     $query->where('employees.is_active', $filters['is_active']);
                 }
             )
             ->when(
-                filled($filters['store_code'] ?? null),
-                function ($query) use ($filters) {
+                !is_null($filters['store_code'] ?? null),
+                function ($query) use ($filters): void {
                     $query->where('employees.store_code', $filters['store_code']);
                 }
             )
