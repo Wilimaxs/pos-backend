@@ -80,9 +80,15 @@ class PermissionSeeder extends Seeder
         ];
 
         foreach ($permissions as $name => $description) {
+            $isOwnerOnly = str_contains($name, '.manage')
+                || str_ends_with($name, '-all');
+
             Permission::query()->updateOrCreate(
                 ['name' => $name],
-                ['description' => $description],
+                [
+                    'description' => $description,
+                    'is_owner_only' => $isOwnerOnly,
+                ],
             );
         }
     }

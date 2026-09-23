@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -61,6 +62,18 @@ class Employee extends Authenticatable
     public function store(): BelongsTo
     {
         return $this->belongsTo(Store::class, 'store_code', 'store_code');
+    }
+
+    public function permissions(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Permission::class, // Model yang ingin diakses
+            'employee_permissions', // tabel penghubung dari employee ke permission
+            'employee_code', // foreign key dari employee_permission ke employee
+            'permission_id', // foreign key dari employee_permission ke permission
+            'employee_code', // key dari employee
+            'id' // key dari permission
+        )->withTimestamps();
     }
 
     public function hasPermission(string $permissionName): bool

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\Employee\EmployeeController;
+use App\Http\Controllers\Api\Employee\PermissionController;
 use App\Http\Controllers\Api\Member\MemberController;
 use App\Http\Controllers\Api\Store\StoreController;
 use App\Http\Controllers\Api\Supplier\SupplierController;
@@ -20,6 +21,9 @@ Route::prefix('v1')->name('v1.')->group(function () {
             ->where('employeeCode', '[A-Za-z0-9-]+')->name('employees.update');
         Route::get('/employees', [EmployeeController::class, 'employeeList'])->middleware('permission:employee.view,employee.view-all')
             ->name('employees.list');
+        Route::put('/employees/{employeeCode}/permissions', [PermissionController::class, 'update'])
+            ->middleware('permission:employee.manage-permission,employee.manage-permission-all')
+            ->where('employeeCode', '[A-Za-z0-9-]+')->name('employees.permissions.update');
     });
 
     // Member
