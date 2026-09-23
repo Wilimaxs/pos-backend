@@ -70,13 +70,12 @@ class StoreController extends Controller
 
     public function create(CreateStoreRequest $request): JsonResponse
     {
-        $store = $this->storeService->create(
+        $this->storeService->create(
             data: $request->validated(),
         );
 
         return ApiResponse::success(
             message: 'Store berhasil dibuat',
-            data: StoreResource::make($store),
             statusCode: 201,
         );
     }
