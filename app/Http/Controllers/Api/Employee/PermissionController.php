@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Employee;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Employee\UpdatePermissionRequest;
+use App\Http\Resources\Employee\PermissionResource;
 use App\Http\Service\Employee\PermissionService;
 use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
@@ -32,6 +33,26 @@ class PermissionController extends Controller
 
         return ApiResponse::success(
             message: 'Permission pegawai berhasil diperbarui'
+        );
+    }
+
+    public function index(
+        Request $request,
+        string  $employeeCode
+    ): JsonResponse
+    {
+        $permissions = $this->permissionService->getForEmployee(
+            employeeCode: $employeeCode,
+            actor: $request->user(),
+        );
+
+        $data = PermissionResource::collection(
+            $permissions
+        )->resolve($request);
+
+        return ApiResponse::success(
+            message: 'Data permission berhasil diambil',
+            data: $data,
         );
     }
 }

@@ -24,6 +24,9 @@ Route::prefix('v1')->name('v1.')->group(function () {
         Route::put('/employees/{employeeCode}/permissions', [PermissionController::class, 'update'])
             ->middleware('permission:employee.manage-permission,employee.manage-permission-all')
             ->where('employeeCode', '[A-Za-z0-9-]+')->name('employees.permissions.update');
+        Route::get('/employees/{employeeCode}/permissions', [PermissionController::class, 'index'])
+            ->middleware('permission:employee.manage-permission,employee.manage-permission-all')
+            ->where('employeeCode', '[A-Za-z0-9-]+')->name('employees.permissions.list');
     });
 
     // Member
