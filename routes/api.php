@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\Employee\EmployeeController;
 use App\Http\Controllers\Api\Employee\PermissionController;
 use App\Http\Controllers\Api\Member\MemberController;
 use App\Http\Controllers\Api\Product\ProductController;
+use App\Http\Controllers\Api\Purchase\PurchaseController;
 use App\Http\Controllers\Api\Store\StoreController;
 use App\Http\Controllers\Api\Supplier\SupplierController;
 use Illuminate\Support\Facades\Route;
@@ -97,5 +98,16 @@ Route::prefix('v1')->name('v1.')->group(function () {
             ->middleware('permission:product.manage')->name('products.create');
         Route::patch('/products/{sku}', [ProductController::class, 'update'])
             ->where('sku', '[A-Za-z0-9-]+')->name('products.update');
+    });
+
+    // Purchase
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/purchases', [PurchaseController::class, 'purchaseList'])
+            ->middleware('permission:purchase')->name('purchases.list');
+        Route::get('/purchases/{purchaseCode}', [PurchaseController::class, 'detail'])
+            ->middleware('permission:purchase')->where('purchaseCode', '[A-Za-z0-9-]+')
+            ->name('purchases.detail');
+        Route::post('/purchases', [PurchaseController::class, 'create'])
+            ->middleware('permission:purchase')->name('purchases.create');
     });
 });

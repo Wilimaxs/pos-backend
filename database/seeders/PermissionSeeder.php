@@ -26,9 +26,8 @@ class PermissionSeeder extends Seeder
             'product.manage-price' => 'Mengelola harga jual sesuai cakupan store yang diizinkan.',
             'product.manage' => 'Mengelola data master produk dan stok minimum.',
 
-            // Pembelian hanya dilakukan di Gudang Pusat.
-            'purchase.view' => 'Melihat pembelian langsung pada Gudang Pusat.',
-            'purchase.create' => 'Mencatat pembelian barang yang sudah diterima dan lunas di Gudang Pusat.',
+            // Pembelian hanya dilakukan di toko central.
+            'purchase' => 'Melihat dan mencatat pembelian langsung pada toko central sesuai cakupan toko.',
 
             // Inventori.
             'inventory.view' => 'Melihat stok pada store tempat employee ditugaskan.',
@@ -70,6 +69,10 @@ class PermissionSeeder extends Seeder
 
         Permission::query()
             ->where('name', 'like', '%-all')
+            ->delete();
+
+        Permission::query()
+            ->whereIn('name', ['purchase.view', 'purchase.create'])
             ->delete();
 
         foreach ($permissions as $name => $description) {
