@@ -3,9 +3,12 @@
 namespace App\Http\Service\Store;
 
 use App\Models\Employee;
+use App\Models\Product;
+use App\Models\ProductStock;
 use App\Models\Store;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 
 class StoreService
 {
@@ -80,7 +83,28 @@ class StoreService
 
     public function create(array $data): Store
     {
-        return Store::query()->create($data);
+        return DB::transaction(function () use ($data): Store {
+            $store = Store::query()->create($data);
+
+            $now = now();
+            Product::query()->select('sku')->chunkById(500, function ($products) use ($store, $now): void {
+                $rows = [];
+                foreach ($products as $product) {
+                    $rows[] = [
+                        'sku' => $product->sku,
+                        'store_code' => $store->store_code,
+                        'stock_minimum' => 0,
+                        'stock_quantity' => 0,
+                        'selling_price' => 0,
+                        'created_at' => $now,
+                        'updated_at' => $now,
+                    ];
+                }
+                ProductStock::query()->insert($rows);
+            }, 'sku');
+
+            return $store;
+        });
     }
 
     public function update(

@@ -73,7 +73,8 @@ class PermissionSeeder extends Seeder
             ->delete();
 
         foreach ($permissions as $name => $description) {
-            $isOwnerOnly = str_contains($name, '.manage');
+            $isOwnerOnly = str_contains($name, '.manage')
+                && ! in_array($name, ['product.manage', 'product.manage-price'], true);
 
             Permission::query()->updateOrCreate(
                 ['name' => $name],

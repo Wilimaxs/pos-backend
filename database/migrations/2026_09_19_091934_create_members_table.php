@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->string('member_code')->primary();
             $table->string('name', 50);
             $table->string('email')->nullable();
-            $table->string('phone');
+            $table->string('phone')->unique();
             $table->string('address');
             $table->boolean('is_active')->default(true)->index();
             $table->timestamps();

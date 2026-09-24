@@ -11,11 +11,12 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('products', function (Blueprint $table) {
-            $table->string('sku',12)->primary();
+            $table->string('sku', 12)->primary();
             $table->string('category_code', 12);
             $table->string('barcode')->nullable()->unique();
             $table->string('name')->index();
             $table->string('unit')->default('PCS');
+            $table->decimal('cost_price', 15)->default(0);
             $table->string('description')->nullable();
             $table->boolean('is_active')->default(true)->index();
             $table->timestamps();

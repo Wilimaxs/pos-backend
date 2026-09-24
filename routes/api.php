@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\Category\CategoryController;
 use App\Http\Controllers\Api\Employee\EmployeeController;
 use App\Http\Controllers\Api\Employee\PermissionController;
 use App\Http\Controllers\Api\Member\MemberController;
+use App\Http\Controllers\Api\Product\ProductController;
 use App\Http\Controllers\Api\Store\StoreController;
 use App\Http\Controllers\Api\Supplier\SupplierController;
 use Illuminate\Support\Facades\Route;
@@ -83,5 +84,15 @@ Route::prefix('v1')->name('v1.')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/categories/options', [CategoryController::class, 'options'])
             ->middleware('permission:sale.create')->name('sale.options');
+    });
+
+    // Product
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/products', [ProductController::class, 'productList'])
+            ->middleware('permission:product.view')->name('products.list');
+        Route::post('/products', [ProductController::class, 'create'])
+            ->middleware('permission:product.manage')->name('products.create');
+        Route::patch('/products/{sku}', [ProductController::class, 'update'])
+            ->where('sku', '[A-Za-z0-9-]+')->name('products.update');
     });
 });
