@@ -20,6 +20,7 @@ class CreateProductRequest extends FormRequest
             'barcode' => ['nullable', 'string', 'max:255', Rule::unique('products', 'barcode')],
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
+            'image' => ['sometimes', 'image', 'mimes:jpeg,png,webp', 'max:2048'],
             'unit' => ['required', Rule::in(['PCS'])],
             'is_active' => ['required', 'boolean'],
             'stock_minimum' => ['required', 'integer', 'min:0'],
@@ -43,6 +44,10 @@ class CreateProductRequest extends FormRequest
             'name.max' => 'Nama produk maksimal 255 karakter.',
 
             'description.string' => 'Deskripsi produk harus berupa teks.',
+
+            'image.image' => 'Gambar produk harus berupa file gambar.',
+            'image.mimes' => 'Gambar produk harus berformat JPG, PNG, atau WebP.',
+            'image.max' => 'Ukuran gambar produk maksimal 2 MB.',
 
             'unit.required' => 'Satuan produk wajib diisi.',
             'unit.in' => 'Satuan produk harus PCS.',

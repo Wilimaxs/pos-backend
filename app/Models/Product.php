@@ -18,6 +18,7 @@ class Product extends Model
 
     protected $fillable = [
         'category_code',
+        'image_path',
         'barcode',
         'name',
         'unit',

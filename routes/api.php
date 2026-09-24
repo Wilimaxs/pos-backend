@@ -90,6 +90,9 @@ Route::prefix('v1')->name('v1.')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/products', [ProductController::class, 'productList'])
             ->middleware('permission:product.view')->name('products.list');
+        Route::get('/products/{sku}', [ProductController::class, 'detail'])
+            ->middleware('permission:product.view')->where('sku', '[A-Za-z0-9-]+')
+            ->name('products.detail');
         Route::post('/products', [ProductController::class, 'create'])
             ->middleware('permission:product.manage')->name('products.create');
         Route::patch('/products/{sku}', [ProductController::class, 'update'])

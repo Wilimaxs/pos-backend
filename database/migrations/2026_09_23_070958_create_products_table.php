@@ -12,6 +12,7 @@ return new class extends Migration {
     {
         Schema::create('products', function (Blueprint $table) {
             $table->string('sku', 12)->primary();
+            $table->string('image_path')->nullable();
             $table->string('category_code', 12);
             $table->string('barcode')->nullable()->unique();
             $table->string('name')->index();

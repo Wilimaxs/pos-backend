@@ -22,6 +22,7 @@ class UpdateProductRequest extends FormRequest
                 ->ignore($this->route('sku'), 'sku')],
             'name' => ['sometimes', 'required', 'string', 'max:255'],
             'description' => ['sometimes', 'nullable', 'string'],
+            'image' => ['sometimes', 'image', 'mimes:jpeg,png,webp', 'max:2048'],
             'unit' => ['sometimes', Rule::in(['PCS'])],
             'is_active' => ['sometimes', 'required', 'boolean'],
             'stock_minimum' => ['sometimes', 'integer', 'min:0'],
@@ -36,7 +37,7 @@ class UpdateProductRequest extends FormRequest
             function (Validator $validator): void {
                 if (!$this->hasAny([
                     'category_code', 'barcode', 'name', 'description', 'unit',
-                    'is_active', 'stock_minimum', 'selling_price',
+                    'is_active', 'stock_minimum', 'selling_price', 'image',
                 ])) {
                     $validator->errors()->add('data', 'Minimal satu data harus diperbarui.');
                 }
@@ -66,6 +67,10 @@ class UpdateProductRequest extends FormRequest
             'name.max' => 'Nama produk maksimal 255 karakter.',
 
             'description.string' => 'Deskripsi produk harus berupa teks.',
+
+            'image.image' => 'Gambar produk harus berupa file gambar.',
+            'image.mimes' => 'Gambar produk harus berformat JPG, PNG, atau WebP.',
+            'image.max' => 'Ukuran gambar produk maksimal 2 MB.',
 
             'unit.in' => 'Satuan produk harus PCS.',
 

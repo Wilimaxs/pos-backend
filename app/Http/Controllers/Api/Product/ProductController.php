@@ -6,10 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\CreateProductRequest;
 use App\Http\Requests\Product\ProductListRequest;
 use App\Http\Requests\Product\UpdateProductRequest;
-use App\Http\Resources\Product\ProductResource;
+use App\Http\Resources\Product\ProductDetailResource;
+use App\Http\Resources\Product\ProductListResource;
 use App\Http\Service\Product\ProductService;
 use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
@@ -23,10 +25,9 @@ class ProductController extends Controller
     {
         $products = $this->productService->paginate(
             filter: $request->validated(),
-            actor: $request->user(),
         );
 
-        $data = ProductResource::collection(
+        $data = ProductListResource::collection(
             $products->getCollection()
         )->resolve($request);
 
@@ -39,6 +40,19 @@ class ProductController extends Controller
                 'total_page' => $products->lastPage(),
                 'total_data' => $products->total(),
             ],
+        );
+    }
+
+    public function detail(Request $request, string $sku): JsonResponse
+    {
+        $product = $this->productService->detail(
+            sku: $sku,
+            actor: $request->user(),
+        );
+
+        return ApiResponse::success(
+            message: 'Detail produk berhasil diambil',
+            data: (new ProductDetailResource($product))->resolve($request),
         );
     }
 
