@@ -19,7 +19,7 @@ class ProductDetailResource extends JsonResource
             'unit' => $this->unit,
             'cost_price' => $this->when(
                 $request->user()?->is_owner,
-                fn() => (int)$this->cost_price
+                fn() => $this->cost_price
             ),
             'description' => $this->description,
             'is_active' => $this->is_active,
