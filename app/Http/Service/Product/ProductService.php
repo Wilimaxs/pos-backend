@@ -17,18 +17,32 @@ class ProductService
         Employee $actor,
     ): LengthAwarePaginator
     {
+        if (!$actor->is_owner && isset($filter['store_code'])
+            && $filter['store_code'] !== $actor->store_code) {
+            throw new AuthorizationException;
+        }
+
         return Product::query()
             ->select([
-                'sku', 'category_code', 'barcode', 'name', 'unit',
-                'description', 'is_active',
+                'products.sku', 'products.category_code', 'products.barcode',
+                'products.name', 'products.unit', 'products.cost_price',
+                'products.description', 'products.is_active',
             ])
             ->with([
                 'category:category_code,name',
-                'productStocks' => function ($query) use ($actor): void {
+                'productStocks' => function ($query) use ($actor, $filter): void {
                     $query->select([
                         'id', 'sku', 'store_code', 'stock_minimum',
                         'stock_quantity', 'selling_price',
-                    ])->where('store_code', $actor->store_code);
+                    ])->orderBy('store_code');
+
+                    if ($actor->is_owner) {
+                        $query->with('store:store_code,name,phone,is_active');
+                    }
+
+                    if (!$actor->is_owner || isset($filter['store_code'])) {
+                        $query->where('store_code', $filter['store_code'] ?? $actor->store_code);
+                    }
                 },
             ])
             ->when(
@@ -118,6 +132,11 @@ class ProductService
             throw new AuthorizationException;
         }
 
+        if (!$actor->is_owner && isset($data['store_code'])
+            && $data['store_code'] !== $actor->store_code) {
+            throw new AuthorizationException;
+        }
+
         DB::transaction(function () use ($sku, $data, $master, $hasMinimum, $hasPrice, $actor): void {
             $product = Product::query()
                 ->whereKey($sku)
@@ -128,9 +147,10 @@ class ProductService
             }
 
             if ($hasMinimum || $hasPrice) {
+                $storeCode = $actor->is_owner ? $data['store_code'] : $actor->store_code;
                 $stock = ProductStock::query()
                     ->where('sku', $sku)
-                    ->where('store_code', $actor->store_code)
+                    ->where('store_code', $storeCode)
                     ->firstOrFail();
 
                 if ($hasMinimum) {

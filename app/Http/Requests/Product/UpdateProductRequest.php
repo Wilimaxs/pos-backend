@@ -26,6 +26,7 @@ class UpdateProductRequest extends FormRequest
             'is_active' => ['sometimes', 'required', 'boolean'],
             'stock_minimum' => ['sometimes', 'integer', 'min:0'],
             'selling_price' => ['sometimes', 'integer', 'min:0'],
+            'store_code' => ['nullable', 'string', Rule::exists('stores', 'store_code')],
         ];
     }
 
@@ -38,6 +39,12 @@ class UpdateProductRequest extends FormRequest
                     'is_active', 'stock_minimum', 'selling_price',
                 ])) {
                     $validator->errors()->add('data', 'Minimal satu data harus diperbarui.');
+                }
+
+                if ($this->user()?->is_owner
+                    && $this->hasAny(['stock_minimum', 'selling_price'])
+                    && !$this->filled('store_code')) {
+                    $validator->errors()->add('store_code', 'Toko tujuan wajib dipilih.');
                 }
             },
         ];
@@ -70,6 +77,9 @@ class UpdateProductRequest extends FormRequest
 
             'selling_price.integer' => 'Harga jual harus berupa bilangan bulat.',
             'selling_price.min' => 'Harga jual tidak boleh negatif.',
+
+            'store_code.string' => 'Kode toko harus berupa teks.',
+            'store_code.exists' => 'Toko tidak ditemukan.',
         ];
     }
 }
